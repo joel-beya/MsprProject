@@ -32,7 +32,7 @@ class ProductsList extends Component {
     const { products } = this.props;
     return (
         <View>
-           <Text><h1>Liste des Produits</h1></Text>
+           <Text><h1>Products List</h1></Text>
            <ProductsTable products={products} />
         </View>
 )
