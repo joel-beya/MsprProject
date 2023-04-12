@@ -11,7 +11,9 @@ function ProductRow({ product }) {
 //Function for creating products table
 function ProductsTable({ products }) {
   const row =[]
- 
+  products.forEach((product) => {
+    row.push(<ProductRow product={product} key={product.id} />)
+  });
   return <table className='table'> 
     <thead>
       <tr>
@@ -20,6 +22,7 @@ function ProductsTable({ products }) {
       </tr>
     </thead>
     <tbody>
+      {row}
     </tbody>
   </table>
 }
@@ -27,7 +30,12 @@ function ProductsTable({ products }) {
 class ProductsList extends Component {
   render() {
     const { products } = this.props;
-    return <ProductsTable products={products} />
+    return (
+        <View>
+           <Text><h1>Liste des Produits</h1></Text>
+           <ProductsTable products={products} />
+        </View>
+)
   }
 }
 export default ProductsList;
