@@ -7,7 +7,20 @@ function ProductDetails({ route }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{produit.nom}</Text>
-      <Text style={styles.description}>{produit.description}</Text>
+      <View style={styles.detailsContainer}>
+        <View style={styles.detail}>
+          <Text style={styles.label}>Prix:</Text>
+          <Text style={styles.value}>{produit.price}</Text>
+        </View>
+        <View style={styles.detail}>
+          <Text style={styles.label}>Couleur:</Text>
+          <Text style={styles.value}>{produit.color}</Text>
+        </View>
+        <View style={styles.detail}>
+          <Text style={styles.label}>Description:</Text>
+          <Text style={styles.value}>{produit.description}</Text>
+        </View>
+      </View>
     </View>
   );
 }
@@ -23,9 +36,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  description: {
-    fontSize: 18,
-    lineHeight: 24,
+  detailsContainer: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
+  },
+  detail: {
+    flexDirection: 'row',
+    marginBottom: 5,
+  },
+  label: {
+    fontWeight: 'bold',
+    marginRight: 5,
+  },
+  value: {
+    flex: 1,
   },
 });
 

@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { View, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const produits = [
-  { id: 1, nom: 'Produit 1', description: 'Description du produit 1' },
-  { id: 2, nom: 'Produit 2', description: 'Description du produit 2' },
-  { id: 3, nom: 'Produit 3', description: 'Description du produit 3' },
+
+const products = [
+  { id: "01", name: "expresso", price: "1400", description: "le beau Iphone tout noir", color: "Black" },
+  { id: "02", name: "S23 ultra", price: "1400", description: "le beau Samsung tout gris", color: "Grey" },
+  { id: "03", name: "S23 ultra", price: "1400", description: "le beau Samsung tout gris", color: "Grey" },
 ];
 
 function ProductsList({ navigation }) {
-  const [data, setData] = useState(produits);
+  const [data, setData] = useState(products);
 
   function onPressItem(item) {
     navigation.navigate('ProductDetails', { produit: item });
@@ -18,8 +19,8 @@ function ProductsList({ navigation }) {
     return (
       <TouchableOpacity style={styles.itemContainer} onPress={() => onPressItem(item)}>
         <View style={styles.itemContent}>
-          <Text style={styles.itemTitle}>{item.nom}</Text>
-          <Text style={styles.itemDescription}>{item.description}</Text>
+          <Text style={styles.itemTitle}>{item.name}</Text>
+          <Text style={styles.description}>{item.description}</Text>
         </View>
       </TouchableOpacity>
     );
