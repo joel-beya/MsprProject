@@ -12,7 +12,7 @@ function ProductsList({ navigation }) {
   const [data, setData] = useState(products);
 
   function onPressItem(item) {
-    navigation.navigate('ProductDetails', { produit: item });
+    navigation.navigate('Product Details', { produit: item });
   }
 
   function renderItem({ item }) {
@@ -64,4 +64,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProductsList;
-
