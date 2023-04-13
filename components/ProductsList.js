@@ -11,7 +11,7 @@ function ProductsList({ navigation }) {
   const [data, setData] = useState(produits);
 
   function onPressItem(item) {
-    navigation.navigate('DetailsProduit', { produit: item });
+    navigation.navigate('ProductDetails', { produit: item });
   }
 
   function renderItem({ item }) {
