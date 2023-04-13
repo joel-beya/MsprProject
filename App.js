@@ -4,7 +4,9 @@ import ProductsList from './components/ProductsList';
 
 const PRODUCTS = [
   { "id": "01", "name": "Iphone 14 Pro max", "price": "1400", "description": "le beau Iphone tout noir", "color": "Black" },
-  { "id": "02", "name": "S23 ultra", "price": "1400", "description": "le beau Samsung tout gris", "color": "Grey" }
+  { "id": "02", "name": "S23 ultra", "price": "1400", "description": "le beau Samsung tout gris", "color": "Grey" },
+  { "id": "03", "name": "S23 ultra", "price": "1400", "description": "le beau Samsung tout gris", "color": "Grey" },
+  { "id": "04", "name": "S23 ultra", "price": "1400", "description": "le beau Samsung tout gris", "color": "Grey" }
 ];
 
 export default function App() {
