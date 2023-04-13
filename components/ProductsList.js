@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, FlatList, TouchableOpacity, Text } from 'react-native';
+import { View, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 const produits = [
   { id: 1, nom: 'Produit 1', description: 'Description du produit 1' },
@@ -16,21 +16,51 @@ function ProductsList({ navigation }) {
 
   function renderItem({ item }) {
     return (
-      <TouchableOpacity onPress={() => onPressItem(item)}>
-        <View>
-          <Text>{item.nom}</Text>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => onPressItem(item)}>
+        <View style={styles.itemContent}>
+          <Text style={styles.itemTitle}>{item.nom}</Text>
+          <Text style={styles.itemDescription}>{item.description}</Text>
         </View>
       </TouchableOpacity>
     );
   }
 
   return (
-    <FlatList
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id.toString()}
-    />
+    <View style={styles.container}>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+      />
+    </View>
   );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#f5f5f5',
+  },
+  itemContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+  },
+  itemContent: {
+    alignItems: 'center',
+  },
+  itemTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  itemDescription: {
+    fontSize: 16,
+    color: '#666',
+  },
+});
+
 export default ProductsList;
+
