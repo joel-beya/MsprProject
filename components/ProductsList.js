@@ -1,41 +1,36 @@
-import React, { Component } from 'react';
-import { Text, View, AppRegistry } from 'react-native';
+import React, { useState } from 'react';
+import { View, FlatList, TouchableOpacity, Text } from 'react-native';
 
-//Function For creating a single product row
-function ProductRow({ product }) {
-  return <tr>
-    <td>{product.name}</td>
-    <td>{product.price}</td>
-  </tr>
-}
-//Function for creating products table
-function ProductsTable({ products }) {
-  const row =[]
-  products.forEach((product) => {
-    row.push(<ProductRow product={product} key={product.id} />)
-  });
-  return <table className='table'> 
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      {row}
-    </tbody>
-  </table>
-}
-  
-class ProductsList extends Component {
-  render() {
-    const { products } = this.props;
-    return (
-        <View>
-           <Text><h1>Products List</h1></Text>
-           <ProductsTable products={products} />
-        </View>
-)
+const produits = [
+  { id: 1, nom: 'Produit 1', description: 'Description du produit 1' },
+  { id: 2, nom: 'Produit 2', description: 'Description du produit 2' },
+  { id: 3, nom: 'Produit 3', description: 'Description du produit 3' },
+];
+
+function ListeProduits({ navigation }) {
+  const [data, setData] = useState(produits);
+
+  function onPressItem(item) {
+    navigation.navigate('DetailsProduit', { produit: item });
   }
+
+  function renderItem({ item }) {
+    return (
+      <TouchableOpacity onPress={() => onPressItem(item)}>
+        <View>
+          <Text>{item.nom}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <FlatList
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id.toString()}
+    />
+  );
 }
+
 export default ProductsList;
