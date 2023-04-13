@@ -8,12 +8,14 @@ function ProductRow({ product }) {
     <td>{product.price}</td>
   </tr>
 }
+
 //Function for creating products table
 function ProductsTable({ products }) {
   const row =[]
   products.forEach((product) => {
-    row.push(<ProductRow product={product} key={product.id} />)
-  });
+    //row.push(<ProductRow product={product} key={product.id} />)
+    row.push(<ProductRow product={product} />)
+  })
   return <table className='table'> 
     <thead>
       <tr>
@@ -27,7 +29,7 @@ function ProductsTable({ products }) {
   </table>
 }
   
-class ProductsList extends Component {
+class FilterableProductList extends React.Component {
   render() {
     const { products } = this.props;
     return (
@@ -38,4 +40,5 @@ class ProductsList extends Component {
 )
   }
 }
-export default ProductsList;
+export default FilterableProductList;
+
