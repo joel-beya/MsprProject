@@ -7,7 +7,7 @@ const produits = [
   { id: 3, nom: 'Produit 3', description: 'Description du produit 3' },
 ];
 
-function ListeProduits({ navigation }) {
+function ProductsList({ navigation }) {
   const [data, setData] = useState(produits);
 
   function onPressItem(item) {

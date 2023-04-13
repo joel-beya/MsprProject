@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-function DetailsProduit({ route }) {
+function ProductDetails({ route }) {
   const { produit } = route.params;
 
   return (
