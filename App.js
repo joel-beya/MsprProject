@@ -10,7 +10,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="ProductsList" component={ProductsList} />
+        <Stack.Screen name="ProductsList" component={ProductsList} /> 
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
       </Stack.Navigator>
     </NavigationContainer>
