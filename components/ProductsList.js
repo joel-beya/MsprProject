@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import axios from 'axios';
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 // const products = [
 //   { id: "01", name: "expresso", price: "1400", description: "le beau Iphone tout noir", color: "Black" },
@@ -80,3 +79,4 @@ const styles = StyleSheet.create({
 });
 
 export default ProductsList;
+/*zzzz*/
