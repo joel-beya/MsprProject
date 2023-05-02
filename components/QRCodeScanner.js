@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { decode } from 'base-64';
 
 function QRCodeScanner() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -40,7 +41,7 @@ function QRCodeScanner() {
 
   if (qrData) {
     const [email, password] = qrData.split(',');
-    const decodedPassword = atob(password);
+    const decodedPassword = decode(password);
     content = (
       <View style={styles.container}>
         <Button title="Scan again" onPress={handleQrScan} />
