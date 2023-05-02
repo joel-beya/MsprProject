@@ -6,6 +6,7 @@ function QRCodeScanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [qrData, setQrData] = useState(null);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -24,17 +25,28 @@ function QRCodeScanner() {
     setQrData(null);
   };
 
+  async function get_token(email, password) {
+    try {
+      const response = await axios.post('https://mspr4.gwendal.online/login', { email, password });
+      const { token } = response.data;
+      setToken(token);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error', 'Failed to retrieve token. Please try again.');
+    }
+  }
+
   let content;
 
   if (qrData) {
     const [email, password] = qrData.split(',');
+    const decodedPassword = atob(password);
     content = (
       <View style={styles.container}>
-        <Text>Email: {email}</Text>
-        <Text>Password: {password}</Text>
         <Button title="Scan again" onPress={handleQrScan} />
       </View>
     );
+    get_token(email,decodedPassword)
   } else if (scanned) {
     content = (
       <View style={styles.container}>
