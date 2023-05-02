@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { decode } from 'base-64';
+import base64 from 'react-native-base64'
 
 function QRCodeScanner() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -41,13 +41,19 @@ function QRCodeScanner() {
 
   if (qrData) {
     const [email, password] = qrData.split(',');
-    const decodedPassword = decode(password);
+    // const decodedPassword = decode(password);
+    const { passwordObj } = JSON.parse(password);
+    console.log(passwordObj);
+    // const decodedPassword = base64.decode(passwordObj.password);
+    // console.log(decodedPassword);
     content = (
       <View style={styles.container}>
+        <Text>Email: {email}</Text>
+        <Text>Password: {decodedPassword}</Text>
         <Button title="Scan again" onPress={handleQrScan} />
       </View>
     );
-    get_token(email,decodedPassword)
+    // get_token(email,decodedPassword)
   } else if (scanned) {
     content = (
       <View style={styles.container}>
