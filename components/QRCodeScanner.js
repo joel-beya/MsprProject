@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import base64 from 'react-native-base64'
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function QRCodeScanner() {
+  // const { setToken } = props;
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [qrData, setQrData] = useState(null);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -24,17 +29,38 @@ function QRCodeScanner() {
     setQrData(null);
   };
 
+  async function get_token(qrdata) {
+    try {
+      console.log(typeof qrdata)
+      const response = await axios.post('https://mspr4.gwendal.online/login', JSON.stringify(qrdata));
+      const { token } = response.data;
+      await AsyncStorage.setItem('token', token);
+      setToken(token);
+      console.log(token)
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error', 'Failed to retrieve token. Please try again.');
+    }
+  }
+
   let content;
 
   if (qrData) {
-    const [email, password] = qrData.split(',');
+
+    const parsedQrData = JSON.parse(qrData);
+    const password = parsedQrData.password;
+    // console.log(password)
+    const decodedPassword = base64.decode(password);
+    // console.log(decodedPassword)
+    parsedQrData.password = decodedPassword;
+    // console.log(parsedQrData);
     content = (
       <View style={styles.container}>
-        <Text>Email: {email}</Text>
-        <Text>Password: {password}</Text>
+        <Text>Password: {qrData}</Text>
         <Button title="Scan again" onPress={handleQrScan} />
       </View>
     );
+    get_token(parsedQrData)
   } else if (scanned) {
     content = (
       <View style={styles.container}>
