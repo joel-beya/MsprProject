@@ -3,7 +3,10 @@ import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import base64 from 'react-native-base64'
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 function QRCodeScanner() {
+  // const { setToken } = props;
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [qrData, setQrData] = useState(null);
@@ -30,8 +33,8 @@ function QRCodeScanner() {
     try {
       console.log(typeof qrdata)
       const response = await axios.post('https://mspr4.gwendal.online/login', JSON.stringify(qrdata));
-      console.log("pass_2")
       const { token } = response.data;
+      await AsyncStorage.setItem('token', token);
       setToken(token);
       console.log(token)
     } catch (error) {
