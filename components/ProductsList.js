@@ -1,15 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { View, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
-
-
-const products = [
-  { id: "01", name: "expresso", price: "1400", description: "le beau Iphone tout noir", color: "Black" },
-  { id: "02", name: "S23 ultra", price: "1400", description: "le beau Samsung tout gris", color: "Grey" },
-  { id: "03", name: "S23 ultra", price: "1400", description: "le beau Samsung tout gris", color: "Grey" },
-];
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ProductsList({ navigation }) {
-  const [data, setData] = useState(products);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await getProducts();
+      setData(response.data);
+    }
+    fetchData();
+  }, []);
+
+    async function getProducts() {
+      try {
+        const token = await AsyncStorage.getItem('token'); // récupérer le token depuis le cache
+        if (token !== null) {
+          return axios.get('https://mspr4.gwendal.online/products/', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        }
+      } catch (error) {
+        console.log(error);
+        Alert.alert('Error', 'Failed to retrieve token. Please try again.');
+      }
+    }
 
   function onPressItem(item) {
     navigation.navigate('Product Details', { produit: item });

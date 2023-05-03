@@ -49,7 +49,6 @@ function QRCodeScanner() {
 
     const parsedQrData = JSON.parse(qrData);
     const password = parsedQrData.password;
-    // console.log(password)
     const decodedPassword = base64.decode(password);
     // console.log(decodedPassword)
     parsedQrData.password = decodedPassword;
