@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import base64 from 'react-native-base64'
-
+import axios from 'axios';
 function QRCodeScanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -26,11 +26,14 @@ function QRCodeScanner() {
     setQrData(null);
   };
 
-  async function get_token(email, password) {
+  async function get_token(qrdata) {
     try {
-      const response = await axios.post('https://mspr4.gwendal.online/login', { email, password });
+      console.log(typeof qrdata)
+      const response = await axios.post('https://mspr4.gwendal.online/login', JSON.stringify(qrdata));
+      console.log("pass_2")
       const { token } = response.data;
       setToken(token);
+      console.log(token)
     } catch (error) {
       console.log(error);
       Alert.alert('Error', 'Failed to retrieve token. Please try again.');
@@ -40,20 +43,21 @@ function QRCodeScanner() {
   let content;
 
   if (qrData) {
-    const [email, password] = qrData.split(',');
-    // const decodedPassword = decode(password);
-    const { passwordObj } = JSON.parse(password);
-    console.log(passwordObj);
-    // const decodedPassword = base64.decode(passwordObj.password);
-    // console.log(decodedPassword);
+
+    const parsedQrData = JSON.parse(qrData);
+    const password = parsedQrData.password;
+    // console.log(password)
+    const decodedPassword = base64.decode(password);
+    // console.log(decodedPassword)
+    parsedQrData.password = decodedPassword;
+    // console.log(parsedQrData);
     content = (
       <View style={styles.container}>
-        <Text>Email: {email}</Text>
-        <Text>Password: {decodedPassword}</Text>
+        <Text>Password: {qrData}</Text>
         <Button title="Scan again" onPress={handleQrScan} />
       </View>
     );
-    // get_token(email,decodedPassword)
+    get_token(parsedQrData)
   } else if (scanned) {
     content = (
       <View style={styles.container}>
