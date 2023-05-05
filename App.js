@@ -1,29 +1,50 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import ProductsList from './components/ProductsList';
+import ProductDetails from './components/ProductDetails';
+import QRCodeScanner from './components/QRCodeScanner';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const PRODUCTS = [
-  { "id": "01", "name": "Iphone 14 Pro max", "price": "1400", "description": "le beau Iphone tout noir", "color": "Black" },
-  { "id": "02", "name": "S23 ultra", "price": "1400", "description": "le beau Samsung tout gris", "color": "Grey" },
-  { "id": "03", "name": "S23 ultra", "price": "1400", "description": "le beau Samsung tout gris", "color": "Grey" },
-  { "id": "04", "name": "S23 ultra", "price": "1400", "description": "le beau Samsung tout gris", "color": "Grey" }
-];
+import React, { useState, useEffect } from 'react';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+function App() {
+  const [token, setToken] = useState(null);
+  async function getToken() {
+    try {
+      const token = await AsyncStorage.getItem('token'); // récupérer le token depuis le cache
+      if (token !== null) {
+        setToken(token);
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error', 'Failed to retrieve token. Please try again.');
+    }
+  }
+  
+  useEffect(() => {
+    getToken();
+  }, []);
   return (
-    <View style={styles.container}>
-     
-      <StatusBar style="auto" />
-      <ProductsList products={PRODUCTS} />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {token ? (
+          <>
+            <Stack.Screen name="Products List" component={ProductsList} />
+            <Stack.Screen name="Product Details" component={ProductDetails} />
+          </>
+        ) : (
+          <> 
+          <Stack.Screen name="QR Code Scanner" >
+          {props => <QRCodeScanner {...props} setToken={setToken} />}
+          </Stack.Screen>
+          <Stack.Screen name="Products List" component={ProductsList} />
+          <Stack.Screen name="Product Details" component={ProductDetails} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;

@@ -1,104 +1,82 @@
-import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useState , useEffect} from 'react';
+import { View, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//Function For creating a single product row
-function ProductRow({ product }) {
-  return (
-    <View style={styles.row}>
-      <Text style={styles.cell}>{product.name}</Text>
-      <Text style={styles.cell}>{product.price}</Text>
-    </View>
-  );
-}
+function ProductsList({ navigation }) {
+  const [data, setData] = useState([]);
 
-//Function for creating products table
-function ProductsTable({ products }) {
-  const rows = products.map((product) => {
-    return <ProductRow product={product} key={product.id} />;
-  });
+  useEffect(() => {
+    async function fetchData() {
+      const response = await getProducts();
+      setData(response.data);
+    }
+    fetchData();
+  }, []);
 
-  return (
-    <View style={styles.tableContainer}>
-      <View style={styles.table}>
-        <View style={styles.headerRow}>
-          <Text style={styles.headerCell}>Name</Text>
-          <Text style={styles.headerCell}>Price</Text>
-        </View>
-        <View style={[styles.rowsContainer, {flexGrow: 1}]}>
-          {rows}
-        </View>
-      </View>
-    </View>
-  );
-}
+    async function getProducts() {
+      try {
+        const token = await AsyncStorage.getItem('token'); // récupérer le token depuis le cache
+        if (token !== null) {
+          return axios.get('https://mspr4.gwendal.online/products/', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        }
+      } catch (error) {
+        console.log(error);
+        Alert.alert('Error', 'Failed to retrieve token. Please try again.');
+      }
+    }
 
-class ProductsList extends Component {
-  render() {
-    const { products } = this.props;
+  function onPressItem(item) {
+    navigation.navigate('Product Details', { produit: item });
+  }
+
+  function renderItem({ item }) {
     return (
-      <View>
-        <Text style={styles.title}>Products List</Text>
-        <ProductsTable products={products} />
-      </View>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => onPressItem(item)}>
+        <View style={styles.itemContent}>
+          <Text style={styles.itemTitle}>{item.name}</Text>
+          <Text style={styles.description}>{item.description}</Text>
+        </View>
+      </TouchableOpacity>
     );
   }
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'lightgray',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  headerText: {
-    fontWeight: 'bold',
+  container: {
     flex: 1,
-    textAlign: 'center',
+    padding: 10,
+    backgroundColor: '#f5f5f5',
   },
-  tableContainer: {
-    height: 320, // Ajouter une hauteur fixe à la vue parente
+  itemContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
   },
-  table: {
-    borderWidth: 1,
-    borderColor: 'black',
-    marginVertical: 10,
-    flex: 50, // Permet à la vue de s'étendre dans la vue parente
-  },
-  rowsContainer: {
-    paddingHorizontal: 1, // Ajouter un espacement horizontal pour les bords
-  },
-  headerRow: {
-    flexDirection: 'row',
+  itemContent: {
     alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: 'black',
-    paddingVertical: 5,
   },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: 'black',
-    paddingVertical: 5,
-  },
-  headerCell: {
-    fontWeight: 'bold',
-    flex: 1,
-    textAlign: 'center',
-  },
-  cell: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  title: {
+  itemTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 10,
+    marginBottom: 5,
+  },
+  itemDescription: {
+    fontSize: 16,
+    color: '#666',
   },
 });
 
