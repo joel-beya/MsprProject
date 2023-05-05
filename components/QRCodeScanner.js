@@ -31,12 +31,12 @@ function QRCodeScanner() {
 
   async function get_token(qrdata) {
     try {
-      console.log(typeof qrdata)
+      // console.log(typeof qrdata)
       const response = await axios.post('https://mspr4.gwendal.online/login', JSON.stringify(qrdata));
       const { token } = response.data;
       await AsyncStorage.setItem('token', token);
       setToken(token);
-      console.log(token)
+      // console.log(token)
     } catch (error) {
       console.log(error);
       Alert.alert('Error', 'Failed to retrieve token. Please try again.');
