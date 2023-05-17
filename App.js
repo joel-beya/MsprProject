@@ -29,7 +29,11 @@ function App() {
     try {
       await AsyncStorage.removeItem('token');
       setToken(null);
-      navigation.navigate('QR Code Scanner'); // Naviguer vers QRCodeScanner
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'QR Code Scanner' }],
+      });
+      
     } catch (error) {
       console.log(error);
       Alert.alert('Error', 'Failed to reset token. Please try again.');
@@ -43,44 +47,27 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {token ? (
-          <>
-            <Stack.Screen name="Products List"
-              options={({ navigation }) => ({
-                headerRight: () => (
-                  <TouchableOpacity style={{ marginRight: 15 }} onPress={() => resetToken(navigation)}>
-                    <Text style={{ color: 'red' }}>Logout</Text>
-                  </TouchableOpacity>
-                ),
-              })}
-              component={ProductsList}
-            />
-            <Stack.Screen name="Product Details" component={ProductDetails} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="QR Code Scanner" >
-              {props => <QRCodeScanner {...props} setToken={setToken} />}
-            </Stack.Screen>
-            <Stack.Screen name="Products List"
-              options={({ navigation }) => ({
-                headerRight: () => (
-                  <TouchableOpacity style={{ marginRight: 15 }} onPress={() => resetToken(navigation)}>
-                    <Text style={{ color: 'red' }}>Logout</Text>
-                  </TouchableOpacity>
-                ),
-              })}
-              component={ProductsList}
-            />
-            <Stack.Screen name="Product Details" component={ProductDetails} />
-          </>
-        )}
+        {!token ? (
+          <Stack.Screen name="QR Code Scanner" component={QRCodeScanner} />
+        ) : null}
+        <Stack.Screen
+          name="Products List"
+          options={({ navigation }) => ({
+            headerRight: () => (
+              <TouchableOpacity
+                style={{ marginRight: 15 }}
+                onPress={() => resetToken(navigation)}
+              >
+                <Text style={{ color: 'red' }}>Logout</Text>
+              </TouchableOpacity>
+            ),
+            headerLeft: null, // Supprimer le bouton de retour
+          })}
+          component={ProductsList}
+        />
+        <Stack.Screen name="Product Details" component={ProductDetails} />
       </Stack.Navigator>
     </NavigationContainer>
-  );
+  ); 
 }
-
-export default App;
-
-
-
+export default  App;
